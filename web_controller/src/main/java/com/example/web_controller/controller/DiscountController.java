@@ -1,0 +1,49 @@
+package com.example.web_controller.controller;
+
+import com.example.web_controller.entity.Discount;
+import com.example.web_controller.service.DiscountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+@RestController
+@RequestMapping("/discounts")
+public class DiscountController {
+    @Autowired
+    DiscountService discountService;
+
+    @GetMapping("/hien-thi")
+    @ResponseBody
+    public List<Discount> getAll() {
+        System.out.println("list nhe:  ---"+  discountService.getAll());
+        return discountService.getAll();
+    }
+
+    @GetMapping("/getOne/{id}")
+    public Discount getOne(@PathVariable("id") Integer id) {
+        return discountService.getOne(id);
+    }
+    @PostMapping("/add")
+    public void add(@RequestBody Discount dicount){
+        System.out.println("dicount tu fonend" + dicount);
+        discountService.add(dicount);
+        System.out.println("them oke");
+    }
+    @PutMapping("/update")
+    public void update(@RequestBody Discount dicount){
+        System.out.println("Dữ liệu id update: =======   "+dicount.getId());
+        discountService.update(dicount);
+    }
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable("id") Integer id){
+        discountService.delete(id);
+    }
+}
