@@ -1,8 +1,11 @@
 package com.example.web_controller.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +14,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -46,6 +50,8 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDate createdAt;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<Address> addresses;
 
     public UUID getId() {
         return id;

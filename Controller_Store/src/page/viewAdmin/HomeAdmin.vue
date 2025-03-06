@@ -1,6 +1,9 @@
 <template>
   <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg py-3" style="background-color: #f8f8ff">
+    <nav
+      class="navbar navbar-expand-lg py-3 shadow-sm"
+      style="background-color: #f8f8ff"
+    >
       <div class="container">
         <!-- Nút toggle khi thu nhỏ -->
         <button
@@ -17,84 +20,104 @@
 
         <!-- Nội dung Navbar -->
         <div class="collapse navbar-collapse" id="navbarNav">
-          <!-- Danh sách menu bên trái -->
-          <ul class="navbar-nav me-auto">
-            <router-link class="nav-link fw-bold fs-5" to="/donHangAdmin">
-              Đơn hàng
-            </router-link>
+          <!-- Danh sách menu -->
+          <ul class="navbar-nav">
             <li class="nav-item">
-              <router-link class="nav-link fw-bold fs-5" to="/hoaDonAdmin">
+              <router-link
+                class="nav-link fs-6 px-3"
+                to="/donHangAdmin"
+                :class="{ active: isActive('/donHangAdmin') }"
+              >
+                Đơn hàng
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link fs-6 px-3"
+                to="/hoaDonAdmin"
+                :class="{ active: isActive('/hoaDonAdmin') }"
+              >
                 Hóa đơn
               </router-link>
             </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle fw-bold text-black fs-5"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
+            <li class="nav-item">
+              <router-link
+                class="nav-link fs-6 px-3"
+                to="/discountAdmin"
+                :class="{ active: isActive('/discountAdmin') }"
               >
-                Danh mục chỉnh sửa
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <router-link class="dropdown-item" to="/discountAdmin"
-                    >Chỉnh sửa khuyễn mãi</router-link
-                  >
-                </li>
-                <li>
-                  <router-link class="dropdown-item" to="/productAdmin"
-                    >Chỉnh sửa sản phẩm</router-link
-                  >
-                </li>
-                <li>
-                  <router-link class="dropdown-item" to="/userAdmin"
-                    >Thông tin khác hàng</router-link
-                  >
-                </li>
-              </ul>
+                Khuyến mãi
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link fs-6 px-3"
+                to="/productAdmin"
+                :class="{ active: isActive('/productAdmin') }"
+              >
+                Sản phẩm
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link fs-6 px-3"
+                to="/userAdmin"
+                :class="{ active: isActive('/userAdmin') }"
+              >
+                Khách hàng
+              </router-link>
             </li>
           </ul>
 
-          <!-- Ô tìm kiếm căn giữa -->
-          <form class="d-flex mx-auto w-50">
+          <!-- Ô tìm kiếm lớn lùi sang phải -->
+          <form class="d-flex ms-auto w-50">
             <input
-              class="form-control me-2"
+              class="form-control form-control-lg me-2"
               type="search"
               placeholder="Tìm kiếm..."
-              aria-label="Search"
             />
-            <button class="btn btn-dark" type="submit">Search</button>
+            <button class="btn btn-dark btn-lg" type="submit">🔍</button>
           </form>
-
-          <!-- Giỏ hàng bên phải -->
-          <ul class="navbar-nav ms-auto">
-            <router-link to="/whishlist">
-              <img
-                src="../../img/iconwhishlist.png"
-                alt="Giỏ hàng"
-                width="30"
-                height="27"
-                class="d-inline-block align-text-top"
-              />
-            </router-link>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <router-link to="/gioHang">
-              <img
-                src="../../img/gioHang.png"
-                alt="Giỏ hàng"
-                width="30"
-                height="35"
-                class="d-inline-block align-text-top"
-              />
-            </router-link>
-          </ul>
         </div>
       </div>
     </nav>
-    <br />
     <router-view></router-view>
   </div>
 </template>
-<script setup></script>
+
+<script setup>
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const isActive = (path) => route.path === path;
+</script>
+
+<style>
+/* Hover nhẹ nhàng */
+.nav-link {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.nav-link:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 5px;
+}
+
+/* Trang đang chọn - nền xám đậm */
+.nav-link.active {
+  font-weight: bold;
+  color: white !important;
+  background-color: #6c757d !important;
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+
+/* Ô tìm kiếm to và căn phải */
+.form-control-lg {
+  height: 40px;
+  font-size: 16px;
+}
+.btn-lg {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+</style>

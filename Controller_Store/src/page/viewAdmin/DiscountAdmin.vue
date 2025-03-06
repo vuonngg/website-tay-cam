@@ -1,12 +1,13 @@
 <template>
-  <div class="container">
+  <div class="container mt-4">
     <div class="row">
-      <br />
-      <div class="col-8">
-        <h4 class="text-center"><b>Danh sách mã giảm giá</b></h4>
-        <br />
-        <table border="1" class="table table-success text-center table-hover">
-          <thead>
+      <div class="text-center bg-light rounded-3 shadow-sm py-3 mb-4">
+        <h4 class="fw-bold text-dark m-0">Danh Sách Mã Giảm Giá</h4>
+      </div>
+      <!-- Bảng danh sách mã giảm giá -->
+      <div class="col-lg-8">
+        <table class="table table-bordered table-hover text-center">
+          <thead class="table-success">
             <tr>
               <th>STT</th>
               <th>Mã code</th>
@@ -15,7 +16,7 @@
               <th>Ngày bắt đầu</th>
               <th>Ngày hết hạn</th>
               <th>Ngày tạo</th>
-              <th colspan="3"></th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -24,210 +25,124 @@
               :key="dc.id"
               @click="detailAdd(dc)"
             >
-              <th>{{ index + 1 }}</th>
-              <th>{{ dc.code }}</th>
-              <th>{{ dc.quantity }}</th>
-              <th>{{ dc.percentage + "%" }}</th>
-              <th>{{ dc.validFrom }}</th>
-              <th>{{ dc.validTo }}</th>
-              <th>{{ dc.createAt }}</th>
+              <td>{{ index + 1 }}</td>
+              <td>{{ dc.code }}</td>
+              <td>{{ dc.quantity }}</td>
+              <td>{{ dc.percentage }}%</td>
+              <td>{{ dc.validFrom }}</td>
+              <td>{{ dc.validTo }}</td>
+              <td>{{ dc.createAt }}</td>
               <td>
-                <div class="action-buttons">
-                  <button
-                    type="button"
-                    @click="deleteDiscount(dc.id)"
-                    class="btn btn-warning"
-                  >
-                    Xóa
-                  </button>
-                  <button
-                    type="button"
-                    @click="detailUpdate(dc)"
-                    class="btn btn-success"
-                  >
-                    Sửa
-                  </button>
-                </div>
+                <button
+                  @click.stop="detailUpdate(dc)"
+                  class="btn btn-sm btn-success me-2"
+                >
+                  <i class="fas fa-edit"></i> Sửa
+                </button>
+                <button
+                  @click.stop="deleteDiscount(dc.id)"
+                  class="btn btn-sm btn-warning"
+                >
+                  <i class="fas fa-trash-alt"></i> Xóa
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="col-4 ps-5">
-        <br />
-        <br />
-        <br />
-        <form v-show="isShow">
-          <div class="form-floating">
-            <input
-              type="text"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newDiscount.code"
-            />
 
-            <label for="floatingTextarea">Mã code</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              min="5"
-              max="100"
-              step="5"
-              v-model="newDiscount.quantity"
-            />
+      <!-- Form nhập liệu -->
+      <div class="col-lg-4">
+        <div class="card p-3 shadow">
+          <h5 class="text-center fw-bold">
+            {{ isShow ? "Thêm mã giảm giá" : "Cập nhật mã giảm giá" }}
+          </h5>
+          <form>
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label class="form-label">Mã code</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="newDiscount.code"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Số lượng</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="newDiscount.quantity"
+                  min="5"
+                  max="100"
+                  step="5"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Phần trăm (%)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  v-model="newDiscount.percentage"
+                  min="5"
+                  max="100"
+                  step="5"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Ngày bắt đầu</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  v-model="newDiscount.validFrom"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Ngày hết hạn</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  v-model="newDiscount.validTo"
+                  required
+                />
+              </div>
+            </div>
 
-            <label for="floatingTextarea">Số lượng</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              min="11"
-              step="5"
-              v-model="newDiscount.percentage"
-            />
+            <!-- Căn giữa nút -->
+            <div class="text-center mt-3">
+              <button
+                v-if="!isShow"
+                type="button"
+                class="btn btn-secondary d-inline-block mx-2"
+                @click="previousAdd()"
+              >
+                <i class="fas fa-arrow-left"></i> Hủy
+              </button>
 
-            <label for="floatingTextarea">Số phần trăm %</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="date"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newDiscount.validFrom"
-            />
-            <label for="floatingTextarea">Ngày bắt đầu</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="date"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newDiscount.validTo"
-            />
-            <label for="floatingTextarea">Ngày hết hạn</label>
-          </div>
-          <br />
-          <br />
-          <div class="text-center">
-            <button type="button" class="btn btn-info" @click="addDiscount()">
-              Thêm
-            </button>
-          </div>
-        </form>
-        <form v-show="!isShow">
-          <div class="text-end">
-            <button
-              @click="previousAdd()"
-              type="button"
-              class="btn btn-primary"
-              style="
-                --bs-btn-padding-y: 0.25rem;
-                --bs-btn-padding-x: 0.5rem;
-                --bs-btn-font-size: 0.75rem;
-              "
-            >
-              Trở về
-            </button>
-          </div>
+              <button
+                v-if="isShow"
+                type="button"
+                class="btn btn-primary d-inline-block mx-2"
+                @click="addDiscount()"
+              >
+                <i class="fas fa-plus"></i> Thêm mã
+              </button>
 
-          <div class="form-floating">
-            <input
-              type="text"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newDiscount.code"
-            />
-
-            <label for="floatingTextarea">Mã code</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              min="5"
-              max="100"
-              step="5"
-              v-model="newDiscount.quantity"
-            />
-
-            <label for="floatingTextarea">Số lượng</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              min="11"
-              step="5"
-              v-model="newDiscount.percentage"
-            />
-
-            <label for="floatingTextarea">Số phần trăm %</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="date"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newDiscount.validFrom"
-            />
-            <label for="floatingTextarea">Ngày bắt đầu</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="date"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newDiscount.validTo"
-            />
-            <label for="floatingTextarea">Ngày hết hạn</label>
-          </div>
-          <br />
-          <br />
-          <div class="text-center">
-            <button
-              type="button"
-              class="btn btn-success"
-              @click="updateDiscount()"
-            >
-              Sửa
-            </button>
-          </div>
-        </form>
+              <button
+                v-else
+                type="button"
+                class="btn btn-success d-inline-block mx-2"
+                @click="updateDiscount()"
+              >
+                <i class="fas fa-save"></i> Cập nhật
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -330,7 +245,6 @@ const addDiscount = async () => {
 
   const { id, ...discountData } = newDiscount.value;
 
-  // Kiểm tra các trường không được null, rỗng hoặc không hợp lệ
   if (
     !discountData.code.trim() ||
     discountData.percentage == null ||
@@ -343,13 +257,11 @@ const addDiscount = async () => {
     return;
   }
 
-  // Kiểm tra quantity phải là số nguyên >= 1
   if (!Number.isInteger(discountData.quantity) || discountData.quantity < 1) {
     toast.error("Số lượng phải là số nguyên và lớn hơn hoặc bằng 1!");
     return;
   }
 
-  // Kiểm tra percentage phải là số và >= 5
   if (
     typeof discountData.percentage !== "number" ||
     discountData.percentage < 5
@@ -362,7 +274,6 @@ const addDiscount = async () => {
   const validFromDate = new Date(discountData.validFrom);
   const validToDate = new Date(discountData.validTo);
 
-  // Kiểm tra ngày áp dụng phải sau hoặc bằng ngày tạo
   if (validFromDate < createDate) {
     toast.error(
       `Ngày áp dụng (${discountData.validFrom}) phải sau hoặc bằng ngày tạo (${discountData.createAt})!`
@@ -370,13 +281,23 @@ const addDiscount = async () => {
     return;
   }
 
-  // Kiểm tra ngày hết hạn phải sau ngày áp dụng
   if (validToDate <= validFromDate) {
     toast.error(
       `Ngày hết hạn (${discountData.validTo}) phải sau ngày áp dụng (${discountData.validFrom})!`
     );
     return;
   }
+
+  // Thêm hộp thoại xác nhận trước khi thêm
+  const result = await Swal.fire({
+    title: "Xác nhận thêm mã giảm giá?",
+    icon: "info", // Icon bình thường (không phải cảnh báo)
+    showCancelButton: true,
+    confirmButtonText: "Thêm",
+    cancelButtonText: "Hủy",
+  });
+
+  if (!result.isConfirmed) return;
 
   try {
     const response = await axios.post(
@@ -483,7 +404,7 @@ const updateDiscount = async () => {
         getDiscounts();
         isShow.value = true;
       } catch (error) {
-        console.error("Lỗi khi thêm sửa mã giá:", error);
+        console.error("Lỗi khi sửa mã giá:", error);
         toast.error("Đã xảy ra lỗi khi sửa mã giảm giá!");
       }
     }

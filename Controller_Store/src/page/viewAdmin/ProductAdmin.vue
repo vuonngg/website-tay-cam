@@ -1,292 +1,183 @@
 <template>
-  <div class="container">
+  <div class="container-sm mt-4">
     <div class="row">
-      <br />
-      <div class="col-8">
-        <h4 class="text-center"><b>Danh sách sản phẩm</b></h4>
-        <br />
-        <div v-for="product in products" :key="product.id">
-          <!-- // -->
-          <div class="card mb-3" style="max-width: 800px">
-            <div class="row g-0">
-              <div
-                class="col-md-4 d-flex align-items-center justify-content-center"
-              >
-                <img
-                  :src="product.image"
-                  class="img-fluid"
-                  alt="..."
-                  width="200"
-                  height="150"
-                />
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <b>{{ product.name }}</b>
-                  </h5>
-                  <p class="card-text Helvetica Neue">
-                    {{ product.description }}
-                  </p>
-                  <div class="row">
-                    <div class="col-9">
-                      <p class="card-text">
-                        <small class="text-body-secondary me-2"
-                          >Ngày thêm: <b> {{ product.createAt }}</b></small
-                        >
-                        <small class="text-body-secondary me-2"
-                          >Số lượng: <b> {{ product.quantity }}</b></small
-                        >
-                        <small class="text-body-secondary" style="float: right"
-                          >Giá:
-                          <b style="color: red">
-                            {{ Number(product.price).toLocaleString("vi-VN") }}
-                            vnđ</b
-                          >
-                        </small>
-                      </p>
-                    </div>
-                    <div class="col-3">
-                      <button
-                        type="button"
-                        class="btn btn btn-warning"
-                        style="
-                          --bs-btn-padding-y: 0.25rem;
-                          --bs-btn-padding-x: 0.5rem;
-                          --bs-btn-font-size: 0.75rem;
-                        "
-                        @click="deleteProduct(product.id)"
-                      >
-                        Xóa
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn btn-success ms-2"
-                        style="
-                          --bs-btn-padding-y: 0.25rem;
-                          --bs-btn-padding-x: 0.5rem;
-                          --bs-btn-font-size: 0.75rem;
-                        "
-                        @click="detailUpdate(product)"
-                      >
-                        Sửa
-                      </button>
-                    </div>
-                  </div>
+      <div class="text-center bg-light rounded-3 shadow-sm py-3 mb-4">
+        <h4 class="fw-bold text-dark m-0">Danh Sách Sản Phẩm</h4>
+      </div>
+      <div class="col-lg-2">
+        <h5 class="mb-3 text-start">Bộ lọc</h5>
+        <div class="mb-3">
+          <input
+            class="form-control"
+            placeholder="Tên sản phẩm.."
+            v-model="duLieu"
+            @keyup.enter="timKiem"
+            @input="timKiem"
+          />
+        </div>
+        <div class="mb-3">
+          <input
+            class="form-control"
+            placeholder="Số lượng.."
+            v-model="soLuong"
+            @keyup.enter="timKiem"
+            @input="timKiem"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="vaiTro" class="form-label text-start">Danh mục</label>
+          <select class="form-control" @change="timKiem" v-model="danhMuc">
+            <option value="">Tất cả</option>
+            <option v-for="ct in categorys" :key="ct.id" :value="ct.id">
+              {{ ct.name }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="vaiTro" class="form-label text-start">Giá</label>
+          <select class="form-control" @change="setGia" v-model="gia">
+            <option value="">Tất cả</option>
+            <option value="0">Dưới 3 triệu</option>
+            <option value="1">3 triệu - 7 triệu</option>
+            <option value="2">Trên 7 triệu</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div
+          v-for="product in products"
+          :key="product.id"
+          class="card mb-3 shadow-sm"
+        >
+          <div class="row g-0 align-items-center">
+            <div class="col-md-4 text-center p-2">
+              <img
+                :src="product.image"
+                class="img-fluid rounded"
+                alt="Hình ảnh sản phẩm"
+                style="max-height: 150px; object-fit: cover"
+              />
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                <p class="card-text text-muted">{{ product.description }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-body-secondary"
+                    >Ngày thêm: <b>{{ product.createAt }}</b></small
+                  >
+                  <small class="text-body-secondary"
+                    >Số lượng: <b>{{ product.quantity }}</b></small
+                  >
+                  <small class="text-danger fw-bold"
+                    >Giá:
+                    {{ Number(product.price).toLocaleString("vi-VN") }}
+                    vnđ</small
+                  >
+                </div>
+                <div class="mt-2 d-flex justify-content-end">
+                  <button
+                    class="btn btn-warning btn-sm"
+                    @click="deleteProduct(product.id)"
+                  >
+                    Xóa
+                  </button>
+                  <button
+                    class="btn btn-success btn-sm ms-2"
+                    @click="detailUpdate(product)"
+                  >
+                    Sửa
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <nav aria-label="...">
+        <nav aria-label="Pagination">
           <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-              <a class="page-link">Trước</a>
-            </li>
+            <li class="page-item disabled"><a class="page-link">Trước</a></li>
             <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item" aria-current="page">
-              <a class="page-link" href="#">2</a>
-            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Sau</a>
-            </li>
+            <li class="page-item"><a class="page-link" href="#">Sau</a></li>
           </ul>
         </nav>
       </div>
-      <div class="col-4">
-        <br />
-        <br /><br />
-        <div v-show="!isShow">
-          <div class="form-floating">
+
+      <div class="col-lg-3">
+        <div class="card shadow p-3">
+          <h5 class="fw-bold text-center">
+            {{ isShow ? "Cập nhật sản phẩm" : "Thêm sản phẩm mới" }}
+          </h5>
+          <div class="mb-3">
+            <label class="form-label">Tên sản phẩm</label>
             <input
               type="text"
-              required
               class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
               v-model="newProduct.name"
-            />
-
-            <label for="floatingTextarea">Tên sản phẩm</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
               required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newProduct.price"
             />
-
-            <label for="floatingTextarea">Giá</label>
           </div>
-          <br />
-          <div class="form-floating">
+          <div class="mb-3">
+            <label class="form-label">Giá</label>
             <input
               type="number"
+              class="form-control"
+              v-model="newProduct.price"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Số lượng</label>
+            <input
+              type="number"
+              class="form-control"
+              v-model="newProduct.quantity"
               min="1"
               required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newProduct.quantity"
             />
-
-            <label for="floatingTextarea">Số lượng</label>
           </div>
-          <br />
-          <div class="row">
-            <div class="col-7">
-              <div class="form-floating">
-                <input
-                  type="file"
-                  min="1"
-                  required
-                  class="form-control"
-                  @change="saveImage($event)"
-                />
-
-                <label for="floatingTextarea">Ảnh</label>
-              </div>
-            </div>
-            <div class="col-5">
-              <div style="padding-left: 10px"><b>Danh mục</b></div>
-              <select
-                v-model="newProduct.category"
-                class="form-select"
-                aria-label="Default select example"
-              >
-                <option v-for="ct in categorys" :key="ct.id" :value="ct.id">
-                  {{ ct.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <br />
-          <div class="form-floating">
+          <div class="mb-3">
+            <label class="form-label">Ảnh</label>
             <input
-              type="text"
-              required
+              type="file"
               class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              style="height: 150px"
-              v-model="newProduct.description"
+              @change="saveImage($event)"
+              required
             />
-
-            <label for="floatingTextarea">Mô tả sản phẩm</label>
           </div>
-          <br />
+          <div class="mb-3">
+            <label class="form-label">Danh mục</label>
+            <select v-model="newProduct.category" class="form-select">
+              <option v-for="ct in categorys" :key="ct.id" :value="ct.id">
+                {{ ct.name }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <textarea
+              class="form-control"
+              v-model="newProduct.description"
+              rows="3"
+              required
+            ></textarea>
+          </div>
           <div class="text-center">
-            <button type="button" class="btn btn-info" @click="addProduct()">
+            <button
+              v-if="isShow"
+              class="btn btn-secondary me-2"
+              @click="previousAdd"
+            >
+              Hủy
+            </button>
+            <button v-if="!isShow" class="btn btn-primary" @click="addProduct">
               Thêm sản phẩm
             </button>
-          </div>
-        </div>
-        <div v-show="isShow">
-          <div class="text-end">
-            <button
-              @click="previousAdd()"
-              type="button"
-              class="btn btn-primary"
-              style="
-                --bs-btn-padding-y: 0.25rem;
-                --bs-btn-padding-x: 0.5rem;
-                --bs-btn-font-size: 0.75rem;
-              "
-            >
-              Trở về
-            </button>
-          </div>
-          <div class="form-floating">
-            <input
-              type="text"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newProduct.name"
-            />
-
-            <label for="floatingTextarea">Tên sản phẩm</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newProduct.price"
-            />
-
-            <label for="floatingTextarea">Giá</label>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="number"
-              min="1"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              v-model="newProduct.quantity"
-            />
-
-            <label for="floatingTextarea">Số lượng</label>
-          </div>
-          <br />
-          <div class="row">
-            <div class="col-7">
-              <div class="form-floating">
-                <input
-                  type="file"
-                  min="1"
-                  required
-                  class="form-control"
-                  @change="saveImage($event)"
-                />
-
-                <label for="floatingTextarea">Ảnh</label>
-              </div>
-            </div>
-            <div class="col-5">
-              <div style="padding-left: 10px"><b>Danh mục</b></div>
-              <select
-                v-model="newProduct.category"
-                class="form-select"
-                aria-label="Default select example"
-              >
-                <option v-for="ct in categorys" :key="ct.id" :value="ct.id">
-                  {{ ct.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <br />
-          <div class="form-floating">
-            <input
-              type="text"
-              required
-              class="form-control"
-              placeholder="Leave a comment here"
-              id="floatingTextarea"
-              style="height: 150px"
-              v-model="newProduct.description"
-            />
-
-            <label for="floatingTextarea">Mô tả sản phẩm</label>
-          </div>
-          <br />
-          <div class="text-center">
-            <button type="button" class="btn btn-info" @click="updateProduct()">
-              Cập nhật sản phẩm
+            <button v-else class="btn btn-success" @click="updateProduct">
+              Cập nhật
             </button>
           </div>
         </div>
@@ -300,6 +191,48 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
+
+//tim kiếm
+const duLieu = ref("");
+const danhMuc = ref("");
+const soLuong = ref("");
+const gia = ref("");
+const gia1 = ref("");
+const gia2 = ref("");
+const setGia = () => {
+  if (gia.value === "0") {
+    gia1.value = "0";
+    gia2.value = "3000000";
+  } else if (gia.value === "1") {
+    gia1.value = "3000000";
+    gia2.value = "7000000";
+  } else if (gia.value === "2") {
+    gia1.value = "7000000";
+    gia2.value = "100000000";
+  } else {
+    gia1.value = "";
+    gia2.value = "";
+  }
+  timKiem();
+};
+
+const timKiem = async () => {
+  try {
+    const res = await axios("http://localhost:8080/products/search", {
+      params: {
+        duLieu: duLieu.value,
+        danhMuc: danhMuc.value,
+        gia1: gia1.value,
+        gia2: gia2.value,
+        soLuong: soLuong.value,
+      },
+    });
+    console.log(res.data);
+    products.value = res.data;
+  } catch (error) {
+    console.error("Lỗi khi tim product", error);
+  }
+};
 
 // tro ve
 const previousAdd = () => {
@@ -446,40 +379,51 @@ const validateForm = (isEdit = false) => {
 const addProduct = async () => {
   if (!validateForm(true)) return;
 
-  try {
-    // Upload ảnh
-    const imageUrl = await uploadImage();
-    if (!imageUrl) {
-      toast.error("Không thể upload ảnh.");
-      return;
-    }
+  Swal.fire({
+    title: "Bạn có chắc muốn thêm sản phẩm này?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Có",
+    cancelButtonText: "Không",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        // Upload ảnh
+        const imageUrl = await uploadImage();
+        if (!imageUrl) {
+          toast.error("Không thể upload ảnh.");
+          return;
+        }
 
-    // Tạo sản phẩm mới
-    const productData = {
-      id: null,
-      name: newProduct.value.name,
-      price: newProduct.value.price,
-      quantity: newProduct.value.quantity,
-      image: imageUrl,
-      description: newProduct.value.description,
-      category: { id: newProduct.value.category },
-      createAt: new Date().toISOString().split("T")[0],
-    };
-    console.log("Du lieu truoc khi add", productData);
-    console.log("Dữ liệu JSON:", JSON.stringify(productData, null, 2));
-    // Gửi yêu cầu thêm
-    const res = await axios.post(
-      "http://localhost:8080/products/add",
-      productData
-    );
-    toast.success("Thêm sản phẩm thành công!");
-    getProduct(); // Làm mới danh sách
-    resetNewProduct(); // Reset form
-    fileImage.value = null;
-  } catch (error) {
-    toast.error("Thêm sản phẩm thất bại.");
-    console.error(error);
-  }
+        // Tạo sản phẩm mới
+        const productData = {
+          id: null,
+          name: newProduct.value.name,
+          price: newProduct.value.price,
+          quantity: newProduct.value.quantity,
+          image: imageUrl,
+          description: newProduct.value.description,
+          category: { id: newProduct.value.category },
+          createAt: new Date().toISOString().split("T")[0],
+        };
+        console.log("Dữ liệu trước khi thêm:", productData);
+        console.log("Dữ liệu JSON:", JSON.stringify(productData, null, 2));
+
+        // Gửi yêu cầu thêm
+        const res = await axios.post(
+          "http://localhost:8080/products/add",
+          productData
+        );
+        toast.success("Thêm sản phẩm thành công!");
+        getProduct(); // Làm mới danh sách
+        resetNewProduct(); // Reset form
+        fileImage.value = null;
+      } catch (error) {
+        toast.error("Thêm sản phẩm thất bại.");
+        console.error(error);
+      }
+    }
+  });
 };
 
 //ham xoa
@@ -514,50 +458,60 @@ const deleteProduct = async (id) => {
 const updateProduct = async () => {
   if (!validateForm(true)) return;
 
-  try {
-    let imageUrl = newProduct.value.image; // Giữ nguyên URL ảnh cũ
+  Swal.fire({
+    title: "Bạn có chắc muốn cập nhật sản phẩm này?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Có",
+    cancelButtonText: "Không",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        let imageUrl = newProduct.value.image; // Giữ nguyên URL ảnh cũ
 
-    // Nếu người dùng chọn ảnh mới, upload và cập nhật URL
-    if (fileImage.value) {
-      const uploadedUrl = await uploadImage();
-      if (!uploadedUrl) {
-        toast.error("Không thể upload ảnh.");
-        return;
+        // Nếu người dùng chọn ảnh mới, upload và cập nhật URL
+        if (fileImage.value) {
+          const uploadedUrl = await uploadImage();
+          if (!uploadedUrl) {
+            toast.error("Không thể upload ảnh.");
+            return;
+          }
+          imageUrl = uploadedUrl; // Cập nhật URL ảnh mới
+        }
+
+        // Tạo dữ liệu sản phẩm để update
+        const productData = {
+          id: newProduct.value.id, // ID sản phẩm cần cập nhật
+          name: newProduct.value.name,
+          price: newProduct.value.price,
+          quantity: newProduct.value.quantity,
+          image: imageUrl, // Giữ ảnh cũ hoặc ảnh mới
+          description: newProduct.value.description,
+          category: { id: newProduct.value.category },
+          createAt: newProduct.value.createAt,
+        };
+
+        console.log("Dữ liệu trước khi update:", productData);
+        console.log("Dữ liệu JSON:", JSON.stringify(productData, null, 2));
+
+        // Gửi yêu cầu cập nhật
+        const res = await axios.put(
+          `http://localhost:8080/products/update`,
+          productData
+        );
+
+        toast.success("Cập nhật sản phẩm thành công!");
+        getProduct(); // Làm mới danh sách sản phẩm
+        resetNewProduct(); // Reset form
+        fileImage.value = null;
+      } catch (error) {
+        toast.error("Cập nhật sản phẩm thất bại.");
+        console.error(error);
       }
-      imageUrl = uploadedUrl; // Cập nhật URL ảnh mới
+
+      isShow.value = false;
     }
-
-    // Tạo dữ liệu sản phẩm để update
-    const productData = {
-      id: newProduct.value.id, // ID sản phẩm cần cập nhật
-      name: newProduct.value.name,
-      price: newProduct.value.price,
-      quantity: newProduct.value.quantity,
-      image: imageUrl, // Giữ ảnh cũ hoặc ảnh mới
-      description: newProduct.value.description,
-      category: { id: newProduct.value.category },
-      createAt: newProduct.value.createAt,
-    };
-
-    console.log("Dữ liệu trước khi update:", productData);
-    console.log("Dữ liệu JSON:", JSON.stringify(productData, null, 2));
-
-    // Gửi yêu cầu cập nhật
-    const res = await axios.put(
-      `http://localhost:8080/products/update`,
-      productData
-    );
-
-    toast.success("Cập nhật sản phẩm thành công!");
-    getProduct(); // Làm mới danh sách sản phẩm
-    resetNewProduct(); // Reset form
-    fileImage.value = null;
-  } catch (error) {
-    toast.error("Cập nhật sản phẩm thất bại.");
-    console.error(error);
-  }
-
-  isShow.value = false;
+  });
 };
 
 // phân trang

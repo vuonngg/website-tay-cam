@@ -1,5 +1,6 @@
 package com.example.web_controller.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -66,7 +67,6 @@ public class Address {
 
     @Column(name = "created_at")
     private LocalDate createdAt;
-
     public Integer getId() {
         return id;
     }
