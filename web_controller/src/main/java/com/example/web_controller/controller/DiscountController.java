@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 @RestController
 @RequestMapping("/discounts")
@@ -45,5 +47,19 @@ public class DiscountController {
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable("id") Integer id){
         discountService.delete(id);
+    }
+
+    @GetMapping("/search")
+    public List<Discount> timKiem(@RequestParam("duLieu") String duLieu, @RequestParam("trangThai") String trangThai){
+        LocalDate toDay = LocalDate.now();
+        return discountService.search(duLieu,trangThai,toDay);
+    }
+
+    @GetMapping("/checkCode")
+    public boolean checkCode(@RequestParam("code") String code,@RequestParam( "id") Integer id){
+        if(id == -1){
+            id = null;
+        }
+        return discountService.checkCode(code,id);
     }
 }
