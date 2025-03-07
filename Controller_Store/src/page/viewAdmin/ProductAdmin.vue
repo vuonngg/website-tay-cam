@@ -1,5 +1,5 @@
 <template>
-  <div class="container-sm mt-4">
+  <div class="container-fluid px-5">
     <div class="row">
       <div class="text-center bg-light rounded-3 shadow-sm py-3 mb-4">
         <h4 class="fw-bold text-dark m-0">Danh Sách Sản Phẩm</h4>
@@ -93,6 +93,10 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="text-center text-danger" v-if="products.length === 0">
+          <b><h5>Không tìm thấy kết quả</h5></b>
+          <br /><br /><br />
         </div>
 
         <nav aria-label="Pagination">

@@ -125,8 +125,8 @@
                 </td>
               </tr>
               <tr v-if="users.length === 0">
-                <td colspan="5" class="text-center text-danger">
-                  Không tìm thấy kết quả
+                <td colspan="6" class="text-center text-danger">
+                  <b>Không tìm thấy kết quả</b>
                 </td>
               </tr>
             </tbody>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div
         class="container-fluid d-flex align-items-center justify-content-between px-4"

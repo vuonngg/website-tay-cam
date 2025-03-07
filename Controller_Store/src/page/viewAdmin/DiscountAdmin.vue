@@ -1,11 +1,38 @@
 <template>
-  <div class="container mt-4">
+  <div class="container-fluid px-5">
+    <!-- Tiêu đề -->
+    <div class="text-center bg-light rounded-3 shadow-sm py-3 mb-4">
+      <h4 class="fw-bold text-dark m-0">Danh Sách Mã Giảm Giá</h4>
+    </div>
+
     <div class="row">
-      <div class="text-center bg-light rounded-3 shadow-sm py-3 mb-4">
-        <h4 class="fw-bold text-dark m-0">Danh Sách Mã Giảm Giá</h4>
+      <!-- Bộ lọc -->
+      <div class="col-lg-2 col-md-4 mb-4">
+        <div class="border p-3 bg-white shadow-sm rounded">
+          <h5 class="mb-3 text-start">Bộ lọc</h5>
+          <input
+            class="form-control mb-3"
+            placeholder="Tìm kiếm.."
+            v-model="duLieu"
+            @keyup.enter="timKiem"
+            @input="timKiem"
+          />
+          <label class="form-label">Trạng thái</label>
+          <select
+            class="form-control mb-3"
+            v-model="trangThai"
+            @change="timKiem"
+          >
+            <option value="ALL">Tất cả</option>
+            <option value="EXPIRED">Hết hạn</option>
+            <option value="INACTIVE">Đang chờ</option>
+            <option value="ACTIVE">Đang hoạt động</option>
+          </select>
+        </div>
       </div>
-      <!-- Bảng danh sách mã giảm giá -->
-      <div class="col-lg-8">
+
+      <!-- Bảng danh sách -->
+      <div class="col-lg-7 col-md-8">
         <table class="table table-bordered table-hover text-center">
           <thead class="table-success">
             <tr>
@@ -15,7 +42,7 @@
               <th>Phần trăm</th>
               <th>Ngày bắt đầu</th>
               <th>Ngày hết hạn</th>
-              <th>Ngày tạo</th>
+              <th>Trạng thái</th>
               <th>Hành động</th>
             </tr>
           </thead>
@@ -31,7 +58,26 @@
               <td>{{ dc.percentage }}%</td>
               <td>{{ dc.validFrom }}</td>
               <td>{{ dc.validTo }}</td>
-              <td>{{ dc.createAt }}</td>
+              <td
+                class="text-warning"
+                v-if="
+                  new Date(dc.validFrom).toISOString().split('T')[0] >
+                  new Date().toISOString().split('T')[0]
+                "
+              >
+                <b>Đang chờ</b>
+              </td>
+              <td
+                class="text-success"
+                v-else-if="
+                  new Date(dc.validTo).toISOString().split('T')[0] >=
+                  new Date().toISOString().split('T')[0]
+                "
+              >
+                <b>Đang hoạt động</b>
+              </td>
+              <td class="text-danger" v-else><b>Hết hạn</b></td>
+
               <td>
                 <button
                   @click.stop="detailUpdate(dc)"
@@ -47,12 +93,17 @@
                 </button>
               </td>
             </tr>
+            <tr v-if="discounts.length === 0">
+              <td colspan="8" class="text-center text-danger">
+                <b>Không tìm thấy kết quả</b>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
 
       <!-- Form nhập liệu -->
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <div class="card p-3 shadow">
           <h5 class="text-center fw-bold">
             {{ isShow ? "Thêm mã giảm giá" : "Cập nhật mã giảm giá" }}
@@ -147,7 +198,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
@@ -231,7 +281,57 @@ const detailUpdate = (discount) => {
   discountUpdate.value.createAt = discount.createAt;
   isShow.value = false;
 };
+// check mã
+const iscode = ref(false);
+const checkCode = async () => {
+  const code = newDiscount.value.code?.trim();
+  const id = newDiscount.value.id || null;
+  console.log("Giá trị trước khi gửi:", { code, id });
+  if (!code) return;
 
+  console.log("Gửi kiểm tra mã với:", { code, id }); // Debug
+
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/discounts/checkCode",
+      {
+        params: { code, id },
+      }
+    );
+
+    // Kiểm tra giá trị API trả về
+    iscode.value = response.data === true;
+    console.log("Mã có tồn tại không:", iscode.value);
+  } catch (error) {
+    console.error("Lỗi khi gọi API kiểm tra mã giảm giá:", error);
+    iscode.value = false; // Mặc định không có lỗi
+  }
+};
+const checkCodeAdd = async () => {
+  const code = newDiscount.value.code?.trim();
+  const id = -1;
+  console.log("Giá trị trước khi gửi:", { code, id });
+  if (!code) return;
+
+  console.log("Gửi kiểm tra mã với:", { code, id }); // Debug
+
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/discounts/checkCode",
+      {
+        params: { code, id },
+      }
+    );
+
+    // Kiểm tra giá trị API trả về
+    iscode.value = response.data === true;
+    console.log("Mã có tồn tại không:", iscode.value);
+  } catch (error) {
+    console.error("Lỗi khi gọi API kiểm tra mã giảm giá:", error);
+    iscode.value = false; // Mặc định không có lỗi
+  }
+};
+//thêm
 const addDiscount = async () => {
   console.log(
     "Dữ liệu trước khi gửi:",
@@ -240,6 +340,12 @@ const addDiscount = async () => {
 
   if (!newDiscount.value) {
     toast.error("Dữ liệu giảm giá không hợp lệ!");
+    return;
+  }
+  await checkCodeAdd(); // Gọi API kiểm tra mã trước
+  if (iscode.value) {
+    // Nếu mã đã tồn tại, dừng lại
+    toast.error("Mã giảm giá đã tồn tại, vui lòng nhập mã khác!");
     return;
   }
 
@@ -328,6 +434,13 @@ const updateDiscount = async () => {
 
   if (!discountUpdate.value) {
     toast.error("Dữ liệu giảm giá không hợp lệ!");
+    return;
+  }
+  await checkCode(); // Gọi API kiểm tra mã trước
+
+  if (iscode.value) {
+    // Nếu mã đã tồn tại, dừng lại
+    toast.error("Mã giảm giá đã tồn tại, vui lòng nhập mã khác!");
     return;
   }
 
@@ -438,24 +551,34 @@ const deleteDiscount = async (id) => {
   });
 };
 
+// tim kiem
+const duLieu = ref("");
+const trangThai = ref("ALL");
+const timKiem = async () => {
+  try {
+    const res = await axios("http://localhost:8080/discounts/search", {
+      params: {
+        duLieu: duLieu.value,
+        trangThai: trangThai.value,
+      },
+    });
+    console.log(res.data);
+    discounts.value = res.data;
+  } catch (error) {
+    console.error("Lỗi khi tim discount", error);
+  }
+};
+
 // Gọi API khi component được render
 onMounted(getDiscounts);
 </script>
 
 <style scoped>
-/* Ẩn nút ban đầu nhưng vẫn chiếm không gian */
-tbody tr .action-buttons {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-}
-
-/* Khi hover vào hàng, hiện nút ra */
-tbody tr:hover .action-buttons {
-  opacity: 1;
-  transform: scale(1);
-}
-tbody tr .action-buttons button {
-  margin-right: 2px; /* Tạo khoảng cách giữa các nút */
+.table td,
+.table th {
+  max-width: 150px; /* Giới hạn chiều rộng của ô */
+  overflow: hidden; /* Ẩn phần dư thừa */
+  text-overflow: ellipsis; /* Hiển thị dấu "..." nếu nội dung quá dài */
+  white-space: nowrap; /* Ngăn không cho chữ xuống dòng */
 }
 </style>
