@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderLayout />
-    <Home />
+    <HomeAdmin />
     <br /><br /><br /><br />
     <hr />
     <FooterLayout />

@@ -419,7 +419,7 @@ const addProduct = async () => {
           productData
         );
         toast.success("Thêm sản phẩm thành công!");
-        getProduct(); // Làm mới danh sách
+        timKiem(); // Làm mới danh sách
         resetNewProduct(); // Reset form
         fileImage.value = null;
       } catch (error) {
@@ -449,7 +449,7 @@ const deleteProduct = async (id) => {
       try {
         await axios.delete(`http://localhost:8080/products/delete/${id}`);
         toast.success("Xóa thành công!");
-        getProduct(); // Load lại danh sách sau khi xóa
+        timKiem(); // Load lại danh sách sau khi xóa
       } catch (error) {
         console.error("Lỗi khi xóa sản phẩm:", error);
         toast.error("Xóa thất bại!");
@@ -505,7 +505,7 @@ const updateProduct = async () => {
         );
 
         toast.success("Cập nhật sản phẩm thành công!");
-        getProduct(); // Làm mới danh sách sản phẩm
+        timKiem(); // Làm mới danh sách sản phẩm
         resetNewProduct(); // Reset form
         fileImage.value = null;
       } catch (error) {

@@ -5,7 +5,10 @@
         class="container-fluid d-flex align-items-center justify-content-between px-4"
       >
         <!-- Logo bên trái -->
-        <a class="navbar-brand fw-bold fs-5 d-flex align-items-center" href="#">
+        <a
+          class="navbar-brand fw-bold fs-5 d-flex align-items-center"
+          href="/home"
+        >
           <img
             src="../img/tayCamLogo.jpg"
             alt="Logo"

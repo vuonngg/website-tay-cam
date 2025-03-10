@@ -189,7 +189,7 @@ const deleteUser = (id) => {
       try {
         await axios.delete(`http://localhost:8080/users/delete/${id}`);
         toast.success("Xóa thành công!");
-        getUser(); // Load lại danh sách sau khi xóa
+        timKiem(); // Load lại danh sách sau khi xóa
       } catch (error) {
         console.error("Lỗi khi xóa:", error);
         toast.error("Xóa thất bại!");

@@ -22,4 +22,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             @Param("price1") BigDecimal price1,  // Dùng để tìm theo giá từ
             @Param("price2") BigDecimal price2,  // Dùng để tìm theo giá đến
             @Param("quantity") Integer quantity);  // Dùng để tìm theo số lượng
+
+
+
+
+
 }

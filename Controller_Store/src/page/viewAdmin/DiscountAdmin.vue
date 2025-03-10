@@ -415,7 +415,7 @@ const addDiscount = async () => {
     console.log("Thêm giảm giá thành công:", response.data);
 
     resetDiscount();
-    getDiscounts();
+    timKiem();
   } catch (error) {
     console.error("Lỗi khi thêm giảm giá:", error);
     toast.error("Đã xảy ra lỗi khi thêm giảm giá!");
@@ -514,7 +514,7 @@ const updateDiscount = async () => {
 
         resetDicountUpdate();
         resetDiscount();
-        getDiscounts();
+        timKiem();
         isShow.value = true;
       } catch (error) {
         console.error("Lỗi khi sửa mã giá:", error);
@@ -542,7 +542,7 @@ const deleteDiscount = async (id) => {
       try {
         await axios.delete(`http://localhost:8080/discounts/delete/${id}`);
         toast.success("Xóa thành công!");
-        getDiscounts(); // Load lại danh sách sau khi xóa
+        timKiem(); // Load lại danh sách sau khi xóa
       } catch (error) {
         console.error("Lỗi khi xóa giảm giá:", error);
         toast.error("Xóa thất bại!");

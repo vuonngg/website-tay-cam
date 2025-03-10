@@ -31,4 +31,6 @@ public class ProductService {
     public  List<Product> searchProduct(String ten, Integer danhMuc, BigDecimal gia1, BigDecimal gia2, Integer soLuong){
         return productRepository.searchProducts(ten,danhMuc,gia1,gia2,soLuong);
     }
+
+
 }

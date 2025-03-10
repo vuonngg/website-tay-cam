@@ -1,6 +1,9 @@
 <template>
   <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg py-3" style="background-color: #f8f8ff">
+    <nav
+      class="navbar navbar-expand-lg py-3"
+      style="background-color: #f8f8ff; position: sticky; top: 0; z-index: 1000"
+    >
       <div class="container">
         <!-- Nút toggle khi thu nhỏ -->
         <button
@@ -20,41 +23,28 @@
           <!-- Danh sách menu bên trái -->
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <router-link
-                class="nav-link fw-bold fs-6"
-                :class="{ 'bg-secondary text-white': $route.path === '/' }"
-                to="/"
-              >
+              <router-link class="nav-link fw-bold fs-6" to="/home">
                 Trang chủ
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link
-                class="nav-link fw-bold fs-6"
-                :class="{ 'bg-secondary text-white': $route.path === '/ps' }"
-                to="/ps"
-              >
-                PlayStation Controller
+              <router-link class="nav-link fw-bold fs-6" to="/home#tatCa">
+                Tất cả
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link
-                class="nav-link fw-bold fs-6"
-                :class="{ 'bg-secondary text-white': $route.path === '/xbox' }"
-                to="/xbox"
-              >
-                Xbox Controller
+              <router-link class="nav-link fw-bold fs-6" to="/home#xbox">
+                Xbox
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link
-                class="nav-link fw-bold fs-6"
-                :class="{
-                  'bg-secondary text-white':
-                    $route.path === '/nitendoController',
-                }"
-                to="/nitendoController"
-              >
+              <router-link class="nav-link fw-bold fs-6" to="/home#ps">
+                PlayStation
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link class="nav-link fw-bold fs-6" to="/home#nitendo">
                 Nintendo Switch
               </router-link>
             </li>
@@ -100,6 +90,32 @@
       </div>
     </nav>
     <router-view></router-view>
+    <div>
+      <!-- Nút liên hệ Zalo và Facebook -->
+      <div class="contact-button">
+        <!-- Nút Zalo -->
+        <a
+          href="https://zaloapp.com/qr/p/1utj308vmcoxs"
+          target="_blank"
+          class="d-block mb-2"
+        >
+          <img
+            src="../../img/Icon_of_Zalo.svg.png"
+            alt="Zalo"
+            class="img-fluid rounded-circle"
+          />
+        </a>
+
+        <!-- Nút Facebook -->
+        <a href="https://www.facebook.com/vuong04321" target="_blank">
+          <img
+            src="../../img/2021_Facebook_icon.svg.png"
+            alt="Facebook"
+            class="img-fluid rounded-circle"
+          />
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -133,5 +149,25 @@ form .form-control {
 
 .nav-item {
   margin-right: 20px; /* Tạo khoảng cách đều giữa các biểu tượng */
+}
+.contact-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-button img {
+  width: 50px;
+  height: 50px;
+  transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng khi hover */
+.contact-button:hover img {
+  transform: scale(1.1);
 }
 </style>
