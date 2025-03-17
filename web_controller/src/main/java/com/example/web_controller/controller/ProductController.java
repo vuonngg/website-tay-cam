@@ -43,17 +43,22 @@ public class ProductController {
 
     @PostMapping("/add")
     public void add(@RequestBody Product product) {
-        productService.sava(product);
+        productService.save(product);
     }
 
     @PutMapping("/update")
     public void update(@RequestBody Product product) {
-        productService.sava(product);
+        productService.save(product);
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable("id") Integer id) {
         productService.delete(id);
+    }
+
+    @GetMapping("/get-product/{id}")
+    public Product getOne(@PathVariable("id") Integer id){
+        return productService.getOne(id);
     }
 
     @GetMapping("/search")
@@ -74,4 +79,5 @@ public class ProductController {
 
         return productService.searchProduct(ten, danhMuc, gia1, gia2, soLuong);
     }
+
 }

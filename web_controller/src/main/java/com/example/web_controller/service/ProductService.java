@@ -21,7 +21,7 @@ public class ProductService {
     public Product getOne(Integer id){
         return productRepository.findById(id).get();
     }
-    public  void sava(Product product){
+    public  void save(Product product){
         productRepository.save(product);
     }
     public void delete( Integer id){

@@ -113,9 +113,7 @@
                         </h6>
 
                         <p class="card-text fs-6">
-                          <small>
-                            {{ truncateText(pd.description, 100) }}</small
-                          >
+                          <small> {{ truncateText(pd.description, 93) }}</small>
                         </p>
                       </router-link>
                       <!-- Phần giá và button luôn nằm dưới cùng -->
@@ -191,9 +189,7 @@
                         </h6>
 
                         <p class="card-text fs-6">
-                          <small>
-                            {{ truncateText(pd.description, 100) }}</small
-                          >
+                          <small> {{ truncateText(pd.description, 93) }}</small>
                         </p>
                       </router-link>
                       <!-- Phần giá và button luôn nằm dưới cùng -->
@@ -269,9 +265,7 @@
                         </h6>
 
                         <p class="card-text fs-6">
-                          <small>
-                            {{ truncateText(pd.description, 100) }}</small
-                          >
+                          <small> {{ truncateText(pd.description, 93) }}</small>
                         </p>
                       </router-link>
                       <!-- Phần giá và button luôn nằm dưới cùng -->
@@ -347,9 +341,7 @@
                         </h6>
 
                         <p class="card-text fs-6">
-                          <small>
-                            {{ truncateText(pd.description, 100) }}</small
-                          >
+                          <small> {{ truncateText(pd.description, 93) }}</small>
                         </p>
                       </router-link>
                       <!-- Phần giá và button luôn nằm dưới cùng -->
@@ -421,7 +413,7 @@
                       </h6>
 
                       <p class="card-text fs-6">
-                        <small> {{ truncateText(pd.description, 100) }}</small>
+                        <small> {{ truncateText(pd.description, 93) }}</small>
                       </p>
                     </router-link>
                     <!-- Phần giá và button luôn nằm dưới cùng -->
@@ -503,7 +495,7 @@
                       </h6>
 
                       <p class="card-text fs-6">
-                        <small> {{ truncateText(pd.description, 100) }}</small>
+                        <small> {{ truncateText(pd.description, 93) }}</small>
                       </p>
                     </router-link>
                     <!-- Phần giá và button luôn nằm dưới cùng -->
@@ -547,6 +539,8 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
+
+const toast = useToast();
 
 //tim kiếm
 const duLieu = ref("");
@@ -613,16 +607,6 @@ const truncateText = (text, maxLength) => {
 
 const categorys = ref([]);
 
-const newProduct = ref({
-  id: null,
-  name: "",
-  price: null,
-  quantity: null,
-  image: "",
-  description: "",
-  category: 2,
-  createAt: null,
-});
 const products = ref([]);
 const getProduct = async () => {
   try {
@@ -647,9 +631,30 @@ const getCategory = async () => {
   }
 };
 // mua hàng
-const muaHang = async (id) => {};
+const muaHang = async (pd) => {};
+
+//fakse user
+const userId = "894de7e6-12c8-4387-94ad-05396cca268d";
 //thêm giỏ hàng
-const themVaoGio = async (id) => {};
+const themVaoGio = async (pd) => {
+  const gioHang = {
+    user: { id: userId }, // Lồng userId vào object
+    product: { id: pd.id }, // Lồng pd.id vào object
+    price: pd.price,
+    quantity: 1,
+    createdAt: new Date().toISOString().split("T")[0],
+  };
+  console.log("Giỏ hàng trước khi gửi:", gioHang);
+  try {
+    const res = await axios.post("http://localhost:8080/cart/add", gioHang);
+    console.log(res.data);
+    toast.success("Đã thêm vào giỏ hàng");
+  } catch (error) {
+    console.error("Lỗi:", error.response ? error.response.data : error);
+    console.error("Lỗi chi tiết:", error.response.data);
+    toast.error("Thêm thất bại");
+  }
+};
 
 onMounted(() => {
   getCategory();
