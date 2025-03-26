@@ -19,9 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/discounts")
 public class DiscountController {
-    @Autowired
-    DiscountService discountService;
+    private final DiscountService discountService;
 
+    public DiscountController(DiscountService discountService) {
+        this.discountService = discountService;
+    }
     @GetMapping("/hien-thi")
     @ResponseBody
     public List<Discount> getAll() {
@@ -35,13 +37,12 @@ public class DiscountController {
     }
     @PostMapping("/add")
     public void add(@RequestBody Discount dicount){
-        System.out.println("dicount tu fonend" + dicount);
         discountService.add(dicount);
         System.out.println("them oke");
     }
     @PutMapping("/update")
     public void update(@RequestBody Discount dicount){
-        System.out.println("Dữ liệu id update: =======   "+dicount.getId());
+
         discountService.update(dicount);
     }
     @DeleteMapping("/delete/{id}")

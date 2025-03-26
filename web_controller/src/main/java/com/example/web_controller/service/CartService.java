@@ -13,11 +13,11 @@ public class CartService {
     @Autowired
     CartRepository cartRepository;
     public List<Cart> getAllbyUserId(UUID id){
-        return cartRepository.findAllByUserId(id);
+        return cartRepository.findAllByUserIdOrderByCreatedAtDesc(id);
     }
 
-    public void delete(Cart cart){
-        cartRepository.delete(cart);
+    public void delete(Integer id){
+        cartRepository.deleteById(id);
     }
 
     public void add(Cart cart){

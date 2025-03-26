@@ -186,3 +186,5 @@ ALTER COLUMN [image] NVARCHAR(255); -- Thay đổi kiểu dữ liệu thành NVA
 -- Thêm cột create_at
 ALTER TABLE [product]
 ADD create_at DATE;
+ALTER TABLE [product]
+ALTER COLUMN [description] NVARCHAR(500);

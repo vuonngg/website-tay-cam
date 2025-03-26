@@ -23,15 +23,16 @@ public class CartController {
 
     @GetMapping("/hien-thi/{id}")
     public List<Cart> getAll(@PathVariable("id")UUID idUser){
+
         return cartService.getAllbyUserId(idUser);
     }
-    @DeleteMapping("/delete")
-    public void delete(@RequestBody Cart cart){
-        cartService.delete(cart);
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable("id") Integer id){
+
+        cartService.delete(id);
     }
     @PostMapping("/add")
     public void add(@RequestBody Cart cart){
-
         cartService.add(cart);
     }
     @PutMapping ("/update")
