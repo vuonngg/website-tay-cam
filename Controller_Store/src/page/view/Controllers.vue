@@ -1,5 +1,6 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" style="background-color: aliceblue">
+    <br /><br />
     <div class="container-sm container-md container-lg container-xl">
       <!-- Carousel -->
       <div

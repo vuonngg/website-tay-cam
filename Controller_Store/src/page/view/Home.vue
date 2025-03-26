@@ -74,7 +74,7 @@
                 />
               </router-link>
             </li>
-            <li class="nav-item ms-3">
+            <li class="nav-item ms-3 position-relative">
               <router-link to="/gioHang">
                 <img
                   src="../../img/gioHang.png"
@@ -83,6 +83,10 @@
                   height="35"
                   class="d-inline-block align-text-top"
                 />
+                <!-- Hiển thị số lượng nếu lớn hơn 0 -->
+                <span v-if="soLuongGioHang > 0" class="cart-badge">{{
+                  soLuongGioHang
+                }}</span>
               </router-link>
             </li>
           </ul>
@@ -119,7 +123,11 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const soLuongGioHang = ref(0);
+</script>
 
 <style scoped>
 /* Thêm lớp CSS để giảm kích thước chữ cho các menu */
@@ -169,5 +177,20 @@ form .form-control {
 /* Hiệu ứng khi hover */
 .contact-button:hover img {
   transform: scale(1.1);
+}
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 </style>
